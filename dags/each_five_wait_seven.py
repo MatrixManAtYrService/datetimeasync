@@ -19,22 +19,23 @@ def after():
     default_args={"owner": "airflow"},
     catchup=False,
 )
-def each_five_wait_two():
+def each_five_wait_seven():
     """
-    Execute every five minutes, finish no earlier than two minutes later.
+    Execute after each five-minute interval, and
+    finish no earlier than seven minutes after that interval starts.
     """
 
     (
         before()
         >> DateTimeSensor(
-            task_id="wait_exec_plus_two",
-            target_time="{{ execution_date.add(minutes=2) }}",
+            task_id="wait_exec_plus_seven",
+            target_time="{{ execution_date.add(minutes=7) }}",
         )
         >> after()
     )
 
 
-the_dag = each_five_wait_two()
+the_dag = each_five_wait_seven()
 
 @dag(
     schedule_interval="*/5 * * * *",
@@ -42,19 +43,20 @@ the_dag = each_five_wait_two()
     default_args={"owner": "airflow"},
     catchup=False,
 )
-def each_five_wait_two_async():
+def each_five_wait_seven_async():
     """
-    Execute every five minutes, finish no earlier than two minutes later.
+    Execute after each five-minute interval, and
+    finish no earlier than seven minutes after that interval starts.
     """
 
     (
         before()
         >> DateTimeSensorAsync(
-            task_id="wait_exec_plus_two",
-            target_time="{{ execution_date.add(minutes=2) }}",
+            task_id="wait_exec_plus_seven",
+            target_time="{{ execution_date.add(minutes=7) }}",
         )
         >> after()
     )
 
 
-the_async_dag = each_five_wait_two_async()
+the_async_dag = each_five_wait_seven_async()
