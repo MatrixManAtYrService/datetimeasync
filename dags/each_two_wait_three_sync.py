@@ -14,25 +14,25 @@ def after():
 
 
 @dag(
-    schedule_interval="*/5 * * * *",
+    schedule_interval="*/2 * * * *",
     start_date=days_ago(1),
     default_args={"owner": "airflow"},
     catchup=False,
 )
-def each_five_wait_seven_sync():
+def each_two_wait_three_sync():
     """
-    Execute after each five-minute interval, and
-    finish no earlier than seven minutes after that interval starts.
+    Execute after each two-minute interval, and
+    finish no earlier than three minutes after that interval starts.
     """
 
     (
         before()
         >> DateTimeSensor(
-            task_id="wait_exec_plus_seven",
-            target_time="{{ execution_date.add(minutes=7) }}",
+            task_id="wait_exec_plus_three",
+            target_time="{{ execution_date.add(minutes=3) }}",
         )
         >> after()
     )
 
 
-the_dag = each_five_wait_seven_sync()
+the_dag = each_two_wait_three_sync()
